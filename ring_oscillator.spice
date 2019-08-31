@@ -1,0 +1,30 @@
+*ring oscillator
+
+.include PMOS-180nm.lib
+.include NMOS-180nm.lib
+.option scale = 0.1u
+*.param VDC = 1
+
+VDD vdd gnd 1.8
+
+x_inv1 vdd gnd 3 1 inverter
+x_inv2 vdd gnd 1 2 inverter
+x_inv3 vdd gnd 2 3 inverter
+
+.ic V(3) = 0 
+
+.tran 0.01ps 0.6ns
+.measure tran freq trig V(1) val = 0.9 rise = 1 targ V(1) val = 0.9 rise = 2
+.control
+run
+plot V(1)
+.endc
+.end
+
+.subckt inverter vd gd in out
+MP out in vd vd pfet w = 10 l = 2
++ad = 50 pd = 30 as = 50 ps = 30
+
+MN out in gd gd nfet w = 10 l = 2
++ad = 50 pd = 30 as = 50 ps = 30
+.ends
